@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Simulator Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #1abc9c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 0.3s ease;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            color: white;
+            position: relative;
+        }
+        
+        .language-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .lang-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(26, 188, 156, 0.5);
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin: 10px 0 20px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .input-box {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--secondary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px auto;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(0, 0, 0, 0.15);
+        }
+        
+        .results-container {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .summary-box {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .summary-item {
+            flex: 1;
+            min-width: 200px;
+            background: var(--light);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .summary-item h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .summary-item p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .profit {
+            color: var(--success);
+        }
+        
+        .loss {
+            color: var(--danger);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        
+        th {
+            background: linear-gradient(to right, var(--primary), var(--dark));
+            color: white;
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        tr:hover {
+            background-color: #f1f7ff;
+        }
+        
+        .profit-cell {
+            color: var(--success);
+            font-weight: 600;
+        }
+        
+        .day-header {
+            background-color: #e3f2fd !important;
+            font-weight: 700;
+        }
+        
+        .total-row {
+            background-color: #e8f5e9 !important;
+            font-weight: 700;
+        }
+        
+        .highlight {
+            animation: highlight 2s ease;
+        }
+        
+        @keyframes highlight {
+            0% { background-color: rgba(46, 204, 113, 0.3); }
+            100% { background-color: transparent; }
+        }
+        
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            opacity: 0.7;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .input-box {
+                min-width: 100%;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .card {
+                padding: 20px 15px;
+            }
+            
+            .language-switcher {
+                position: static;
+                justify-content: center;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="language-switcher">
+                <button id="langRO" class="lang-btn active">
+                    <i class="fas fa-flag"></i> RO
+                </button>
+                <button id="langEN" class="lang-btn">
+                    <i class="fas fa-flag-usa"></i> EN
+                </button>
+            </div>
+            
+            <h1><i class="fas fa-chart-line"></i> <span id="title">Portfolio Simulator Pro</span></h1>
+            <p id="description">Simulează-ți creșterea portofoliului prin tranzacții repetate cu procente aleatorii. Perfect pentru strategiile de trading zilnice.</p>
+        </header>
+        
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-cog"></i> <span id="settingsTitle">Setări Simulare</span></h2>
+            <div class="input-group">
+                <div class="input-box">
+                    <label for="initialValue" id="initialValueLabel">Valoare inițială portofoliu ($):</label>
+                    <input type="number" id="initialValue" value="4145" min="1">
+                </div>
+                
+                <div class="input-box">
+                    <label for="duration" id="durationLabel">Perioadă de simulare:</label>
+                    <input type="number" id="duration" value="28" min="1">
+                </div>
+                
+                <div class="input-box">
+                    <label for="timeUnit" id="timeUnitLabel">Unitate de timp:</label>
+                    <select id="timeUnit">
+                        <option value="days" id="daysOption">Zile</option>
+                        <option value="months" id="monthsOption">Luni</option>
+                        <option value="years" id="yearsOption">Ani</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <div class="input-box">
+                    <label for="tradesPerDay" id="tradesPerDayLabel">Tranzacții pe zi:</label>
+                    <input type="number" id="tradesPerDay" value="3" min="1" max="20">
+                </div>
+                
+                <div class="input-box">
+                    <label for="minPercent" id="minPercentLabel">Procent minim câștig (%):</label>
+                    <input type="number" id="minPercent" value="50.00" step="0.01" min="0" max="100">
+                </div>
+                
+                <div class="input-box">
+                    <label for="maxPercent" id="maxPercentLabel">Procent maxim câștig (%):</label>
+                    <input type="number" id="maxPercent" value="59.99" step="0.01" min="0" max="100">
+                </div>
+            </div>
+            
+            <button id="calculateBtn">
+                <i class="fas fa-calculator"></i> <span id="calculateBtnText">Simulează Tranzacțiile</span>
+            </button>
+        </div>
+        
+        <div id="results" class="results-container">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-chart-bar"></i> <span id="performanceTitle">Rezumat Performanță</span></h2>
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <h3 id="initialValueResultLabel">Valoare Inițială</h3>
+                        <p id="initialValueResult">$4,145.00</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3 id="finalValueResultLabel">Valoare Finală</h3>
+                        <p id="finalValueResult">$7,890.45</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3 id="totalProfitLabel">Profit Total</h3>
+                        <p id="totalProfit" class="profit">$3,745.45</p>
+                    </div>
+                    <div class="summary-item">
+                        <h3 id="growthPercentLabel">Creștere Portofoliu</h3>
+                        <p id="growthPercent" class="profit">+90.36%</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-table"></i> <span id="transactionsTitle">Detaliu Tranzacții</span></h2>
+                <div class="table-container">
+                    <table id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th id="tableDay">Ziua</th>
+                                <th id="tableTrade">Tranzacția</th>
+                                <th id="tablePercent">Procent Câștig (%)</th>
+                                <th id="tableProfit">Profit Tranzacție ($)</th>
+                                <th id="tableTotal">Total Portofoliu ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            <!-- Rezultatele vor fi afișate aici -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p id="footerText">Portfolio Simulator Pro | Un instrument pentru analiza strategiilor de trading | &copy; 2023</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const calculateBtn = document.getElementById('calculateBtn');
+            const resultsContainer = document.getElementById('results');
+            const resultsBody = document.getElementById('resultsBody');
+            const initialValueResult = document.getElementById('initialValueResult');
+            const finalValueResult = document.getElementById('finalValueResult');
+            const totalProfit = document.getElementById('totalProfit');
+            const growthPercent = document.getElementById('growthPercent');
+            
+            // Elemente pentru schimbarea limbii
+            const langRO = document.getElementById('langRO');
+            const langEN = document.getElementById('langEN');
+            
+            // Traduceri
+            const translations = {
+                ro: {
+                    title: "Portfolio Simulator Pro",
+                    description: "Simulează-ți creșterea portofoliului prin tranzacții repetate cu procente aleatorii. Perfect pentru strategiile de trading zilnice.",
+                    settingsTitle: "Setări Simulare",
+                    initialValueLabel: "Valoare inițială portofoliu ($):",
+                    durationLabel: "Perioadă de simulare:",
+                    timeUnitLabel: "Unitate de timp:",
+                    daysOption: "Zile",
+                    monthsOption: "Luni",
+                    yearsOption: "Ani",
+                    tradesPerDayLabel: "Tranzacții pe zi:",
+                    minPercentLabel: "Procent minim câștig (%):",
+                    maxPercentLabel: "Procent maxim câștig (%):",
+                    calculateButton: "Simulează Tranzacțiile",
+                    performanceTitle: "Rezumat Performanță",
+                    initialValueResultLabel: "Valoare Inițială",
+                    finalValueResultLabel: "Valoare Finală",
+                    totalProfitLabel: "Profit Total",
+                    growthPercentLabel: "Creștere Portofoliu",
+                    transactionsTitle: "Detaliu Tranzacții",
+                    tableDay: "Ziua",
+                    tableTrade: "Tranzacția",
+                    tablePercent: "Procent Câștig (%)",
+                    tableProfit: "Profit Tranzacție ($)",
+                    tableTotal: "Total Portofoliu ($)",
+                    footerText: "Portfolio Simulator Pro | Un instrument pentru analiza strategiilor de trading | &copy; 2023"
+                },
+                en: {
+                    title: "Portfolio Simulator Pro",
+                    description: "Simulate your portfolio growth through repeated transactions with random percentages. Perfect for daily trading strategies.",
+                    settingsTitle: "Simulation Settings",
+                    initialValueLabel: "Initial portfolio value ($):",
+                    durationLabel: "Simulation duration:",
+                    timeUnitLabel: "Time unit:",
+                    daysOption: "Days",
+                    monthsOption: "Months",
+                    yearsOption: "Years",
+                    tradesPerDayLabel: "Trades per day:",
+                    minPercentLabel: "Minimum gain percent (%):",
+                    maxPercentLabel: "Maximum gain percent (%):",
+                    calculateButton: "Simulate Transactions",
+                    performanceTitle: "Performance Summary",
+                    initialValueResultLabel: "Initial Value",
+                    finalValueResultLabel: "Final Value",
+                    totalProfitLabel: "Total Profit",
+                    growthPercentLabel: "Portfolio Growth",
+                    transactionsTitle: "Transaction Details",
+                    tableDay: "Day",
+                    tableTrade: "Trade",
+                    tablePercent: "Gain Percent (%)",
+                    tableProfit: "Trade Profit ($)",
+                    tableTotal: "Total Portfolio ($)",
+                    footerText: "Portfolio Simulator Pro | A tool for trading strategy analysis | &copy; 2023"
+                }
+            };
+            
+            // Setează limba inițială
+            let currentLang = 'ro';
+            
+            // Funcție pentru schimbarea limbii
+            function setLanguage(lang) {
+                currentLang = lang;
+                const t = translations[lang];
+                
+                // Actualizează elementele interfeței
+                document.getElementById('title').textContent = t.title;
+                document.getElementById('description').textContent = t.description;
+                document.getElementById('settingsTitle').textContent = t.settingsTitle;
+                document.getElementById('initialValueLabel').textContent = t.initialValueLabel;
+                document.getElementById('durationLabel').textContent = t.durationLabel;
+                document.getElementById('timeUnitLabel').textContent = t.timeUnitLabel;
+                document.getElementById('daysOption').textContent = t.daysOption;
+                document.getElementById('monthsOption').textContent = t.monthsOption;
+                document.getElementById('yearsOption').textContent = t.yearsOption;
+                document.getElementById('tradesPerDayLabel').textContent = t.tradesPerDayLabel;
+                document.getElementById('minPercentLabel').textContent = t.minPercentLabel;
+                document.getElementById('maxPercentLabel').textContent = t.maxPercentLabel;
+                document.getElementById('calculateBtnText').textContent = t.calculateButton;
+                document.getElementById('performanceTitle').textContent = t.performanceTitle;
+                document.getElementById('initialValueResultLabel').textContent = t.initialValueResultLabel;
+                document.getElementById('finalValueResultLabel').textContent = t.finalValueResultLabel;
+                document.getElementById('totalProfitLabel').textContent = t.totalProfitLabel;
+                document.getElementById('growthPercentLabel').textContent = t.growthPercentLabel;
+                document.getElementById('transactionsTitle').textContent = t.transactionsTitle;
+                document.getElementById('tableDay').textContent = t.tableDay;
+                document.getElementById('tableTrade').textContent = t.tableTrade;
+                document.getElementById('tablePercent').textContent = t.tablePercent;
+                document.getElementById('tableProfit').textContent = t.tableProfit;
+                document.getElementById('tableTotal').textContent = t.tableTotal;
+                document.getElementById('footerText').textContent = t.footerText;
+                
+                // Actualizează starea butoanelor
+                if (lang === 'ro') {
+                    langRO.classList.add('active');
+                    langEN.classList.remove('active');
+                } else {
+                    langEN.classList.add('active');
+                    langRO.classList.remove('active');
+                }
+                
+                // Reafisează rezultatele dacă sunt vizibile
+                if (resultsContainer.style.display === 'block') {
+                    displayResults(lastResults.initial, lastResults.final, lastResults.transactions);
+                }
+            }
+            
+            // Evenimente pentru schimbarea limbii
+            langRO.addEventListener('click', () => setLanguage('ro'));
+            langEN.addEventListener('click', () => setLanguage('en'));
+            
+            // Variabilă pentru stocarea ultimelor rezultate
+            let lastResults = null;
+            
+            calculateBtn.addEventListener('click', calculateSimulation);
+            
+            function calculateSimulation() {
+                // Obține valorile din formular
+                const initialValue = parseFloat(document.getElementById('initialValue').value);
+                const duration = parseInt(document.getElementById('duration').value);
+                const timeUnit = document.getElementById('timeUnit').value;
+                const tradesPerDay = parseInt(document.getElementById('tradesPerDay').value);
+                const minPercent = parseFloat(document.getElementById('minPercent').value);
+                const maxPercent = parseFloat(document.getElementById('maxPercent').value);
+                
+                // Convertim perioada în zile
+                let totalDays = duration;
+                if (timeUnit === 'months') totalDays = duration * 30;
+                else if (timeUnit === 'years') totalDays = duration * 365;
+                
+                // Simulăm tranzacțiile
+                let portfolio = initialValue;
+                let transactions = [];
+                
+                for (let day = 1; day <= totalDays; day++) {
+                    for (let trade = 1; trade <= tradesPerDay; trade++) {
+                        // Generăm un procent aleator între minPercent și maxPercent
+                        const gainPercent = parseFloat((Math.random() * (maxPercent - minPercent) + minPercent).toFixed(2));
+                        
+                        // Calculăm valoarea tranzacției (1% din portofoliu)
+                        const tradeValue = portfolio * 0.01;
+                        
+                        // Calculăm profitul
+                        const profit = tradeValue * (gainPercent / 100);
+                        
+                        // Actualizăm portofoliul
+                        portfolio += profit;
+                        
+                        // Salvăm tranzacția
+                        transactions.push({
+                            day: day,
+                            trade: trade,
+                            gainPercent: gainPercent,
+                            profit: profit,
+                            portfolio: portfolio
+                        });
+                    }
+                }
+                
+                // Actualizăm rezultatele
+                displayResults(initialValue, portfolio, transactions);
+            }
+            
+            function displayResults(initial, final, transactions) {
+                // Salvăm ultimele rezultate
+                lastResults = { initial, final, transactions };
+                
+                // Actualizează sumarele
+                initialValueResult.textContent = `$${initial.toFixed(2)}`;
+                finalValueResult.textContent = `$${final.toFixed(2)}`;
+                
+                const totalProfitValue = final - initial;
+                totalProfit.textContent = `$${totalProfitValue.toFixed(2)}`;
+                totalProfit.className = totalProfitValue >= 0 ? 'profit' : 'loss';
+                
+                const growth = ((final - initial) / initial) * 100;
+                growthPercent.textContent = `${growth >= 0 ? '+' : ''}${growth.toFixed(2)}%`;
+                growthPercent.className = growth >= 0 ? 'profit' : 'loss';
+                
+                // Construiește tabelul
+                resultsBody.innerHTML = '';
+                let currentDay = 0;
+                
+                transactions.forEach((t, index) => {
+                    if (t.day !== currentDay) {
+                        currentDay = t.day;
+                        // Adaugă rândul pentru ziua nouă
+                        const dayRow = document.createElement('tr');
+                        dayRow.className = 'day-header';
+                        
+                        if (currentLang === 'ro') {
+                            dayRow.innerHTML = `
+                                <td>${t.day}</td>
+                                <td colspan="4">Ziua ${t.day} - Tranzacții</td>
+                            `;
+                        } else {
+                            dayRow.innerHTML = `
+                                <td>${t.day}</td>
+                                <td colspan="4">Day ${t.day} - Transactions</td>
+                            `;
+                        }
+                        
+                        resultsBody.appendChild(dayRow);
+                    }
+                    
+                    const row = document.createElement('tr');
+                    if (index === transactions.length - 1) {
+                        row.className = 'total-row highlight';
+                    }
+                    
+                    row.innerHTML = `
+                        <td></td>
+                        <td>${t.trade}</td>
+                        <td>${t.gainPercent}%</td>
+                        <td class="profit-cell">+$${t.profit.toFixed(2)}</td>
+                        <td>$${t.portfolio.toFixed(2)}</td>
+                    `;
+                    
+                    resultsBody.appendChild(row);
+                });
+                
+                // Afișează rezultatele
+                resultsContainer.style.display = 'block';
+                
+                // Derulează la rezultate
+                resultsContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Inițializare cu datele din exemplu
+            calculateSimulation();
+        });
+    </script>
+</body>
+</html>
