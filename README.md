@@ -1,6 +1,6 @@
 # Portfolio Simulator Pro
 
-![Portfolio Simulator Preview](https://via.placeholder.com/800x400.png?text=Portfolio+Simulator+Pro+Preview)
+![Portfolio Simulator Preview]([https://via.placeholder.com/800x400.png?text=Portfolio+Simulator+Pro+Preview](https://tonihamza.github.io/Portfolio-Simulator-Pro/))
 
 > Advanced portfolio growth simulation with customizable trading strategies
 
